@@ -2,17 +2,11 @@ import pandas as pd
 import numpy as np
 import streamlit as st
 import datetime
-
-# Yfinance to retrieve financial data 
 import yfinance as yf
 # Plotly for Data Visualization
 import plotly.express as px
 import plotly.graph_objs as go
-import plotly.subplots as sp
 from plotly.subplots import make_subplots
-import plotly.figure_factory as ff
-import plotly.io as pio
-from IPython.display import display, YouTubeVideo
 from plotly.offline import init_notebook_mode
 init_notebook_mode(connected=True)
 
@@ -105,13 +99,11 @@ def portfolio_returns(tickers_and_values, start_date, end_date, benchmark):
     # Running function to compare portfolio and benchmark
     fig2 = portfolio_vs_benchmark(port_returns, benchmark_returns)    
 
-    #fig.show() # Displaying Portfolio Allocation plot
-
     # If we have more than one security in the portfolio, 
     # we run function to evaluate each security individually
     if len(tickers_weights) > 1:
         fig1 = perform_portfolio_analysis(df, tickers_weights)
-        #fig1.show()
+        fig1.show()
     # Displaying Portfolio vs Benchmark plot    
     return port_returns, benchmark_returns, fig, fig1, fig2
     
@@ -248,24 +240,15 @@ def portfolio_vs_benchmark(port_returns, benchmark_returns):
 
     return fig2 # Returning subplots
 
-#Para este caso vamos a crear la app pero con dos escenarios.
-# El primero sera que la persona puede definir sus Pesos como inputs.
-# La otra sera que seran calculadas por medio de Markowitz
-
-#Lo primero sera crear la app solamente ocn los pesos como inoputs, y despues
-#Agregar la funcion de Markowitz
-
-
-
 #%% Streamlit
 def main():
     st.set_page_config(layout="wide")
     sp500_com, dic_sp500, dic_sp500_2, list_500 = get_sp500()
-    st.title("Stock Portfolio App (S&P500)")
-    st.markdown("""Stock App is a sophisticated tool for monitoring the S&P 500. Utilizing yfinance for data retrieval and Plotly for visualizations, our app offers comprehensive stock data and interactive charts to identify market trends. \n\n
-                \n\nAdditionally, Stock App features a prediction model using **linear regression** with **sklearn**, allowing you to simulate trading actions and compare them to the buy-and-hold strategy.\n\n
-                \n\nEnhance your investment decisions with cutting-edge insights from Stock App.
-                """)
+    st.title("Stock Portfolio App (S&P 500)")
+    st.markdown("""Welcome to the Stock Portfolio App, your comprehensive tool for managing and optimizing stock investments. This app allows you to input your stock portfolio, specify the initial investment amount, and set the investment period. You can also assign weights to each stock to tailor your portfolio to your preferences.\n\n
+                \n\nUsing `yfinance` for accurate financial data retrieval and `Plotly` for interactive visualizations, our app provides detailed insights into your portfolio's performance and compares it with the S&P 500 benchmark.\n\n
+                \n\nWe're also working on implementing the **Markowitz Mean-Variance model** to help you optimize your portfolio's risk and return. \n\n\n\n""")
+
     col1,col3,col4,col5 = st.columns([4,2,2,1])
     
     with col1:
@@ -329,11 +312,6 @@ def main():
         st.markdown(f"<h1 style='text-align: center;'> Portfolio vs Benchmark (S&P500) </h1>", unsafe_allow_html=True)
         st.write(fig2)
 
-
-    
-
-
-    
 if __name__ == '__main__':
     main()
 
