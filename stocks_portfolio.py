@@ -103,7 +103,6 @@ def portfolio_returns(tickers_and_values, start_date, end_date, benchmark):
     # we run function to evaluate each security individually
     if len(tickers_weights) > 1:
         fig1 = perform_portfolio_analysis(df, tickers_weights)
-        fig1.show()
     # Displaying Portfolio vs Benchmark plot    
     return port_returns, benchmark_returns, fig, fig1, fig2
     
@@ -314,5 +313,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
