@@ -311,5 +311,8 @@ def main():
         st.markdown(f"<h1 style='text-align: center;'> Portfolio vs Benchmark (S&P500) </h1>", unsafe_allow_html=True)
         st.write(fig2)
 
+    st.markdown("##")
+    st.markdown("##")
+    st.write("© Copyright 2024 Felipe Zenteno  All rights reserved.")
 if __name__ == '__main__':
     main()
