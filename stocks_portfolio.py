@@ -105,7 +105,7 @@ def portfolio_returns(tickers_and_values, start_date, end_date, benchmark):
     # Running function to compare portfolio and benchmark
     fig2 = portfolio_vs_benchmark(port_returns, benchmark_returns)    
 
-    fig.show() # Displaying Portfolio Allocation plot
+    #fig.show() # Displaying Portfolio Allocation plot
 
     # If we have more than one security in the portfolio, 
     # we run function to evaluate each security individually
