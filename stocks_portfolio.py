@@ -683,6 +683,7 @@ def main():
     with col2:
         st.write(fig1)
         st.markdown(f"<h1 style='text-align: center;'> Portfolio vs Benchmark (S&P500) </h1>", unsafe_allow_html=True)
+        st.markdown(f"<p style='text-align: center; font-size: 14px;'> For this case, the benchmark is the ^GSPC, which represents the S&P 500 index </p>", unsafe_allow_html=True)
         st.write(fig2)
     st.divider()
     st.markdown(f"<h1 style='text-align: center;'>  MVO and Markowitz’s Efficient Frontier</h1>", unsafe_allow_html=True)
