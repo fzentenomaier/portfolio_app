@@ -719,29 +719,31 @@ def main():
         """)
         sharpe_ratio_formula = r'\text{Sharpe Ratio} = \frac{ \text{Expected Return} - \text{Risk-Free Rate} }{ \text{Volatility} }'
         st.latex(sharpe_ratio_formula)
-    fig, port_min, port_max = get_portfolio_opt(list_stock_ticker, start, end)
-    
-    col1, col2, col3 = st.columns([5,1,5])
-    with col1:
-        st.write(fig)
-    
-    with col3:
-        fig = plot_portfolio_allocation(port_min, port_max, list_stock_ticker)
-        fig.update_layout(showlegend=False)
-        st.write(fig)
-    #Min Vol
-    values_stocks_min = [int(x*initial_amount_selected) for x in port_min[0]]
-    tickers_min = dict(zip(list_stock_ticker, values_stocks_min))
-    #Max Sharpe
-    values_stocks_max = [int(x*initial_amount_selected) for x in port_max[0]]
-    tickers_max = dict(zip(list_stock_ticker, values_stocks_max))
-    
-    port_returns, benchmark_returns, fig, fig1, fig2 = portfolio_returns_extra(tickers, start, end, '^GSPC', tickers_min, tickers_max)
-    fig2.update_layout(showlegend=False)
-    st.markdown(f"<h1 style='text-align: center;'> Evaluation of All Portfolios </h1>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1,5,1])
-    with col2:
-        st.write(fig2)
+    if st.button("Run the Optimization Model"):
+     
+        fig, port_min, port_max = get_portfolio_opt(list_stock_ticker, start, end)
+        
+        col1, col2, col3 = st.columns([5,1,5])
+        with col1:
+            st.write(fig)
+        
+        with col3:
+            fig = plot_portfolio_allocation(port_min, port_max, list_stock_ticker)
+            fig.update_layout(showlegend=False)
+            st.write(fig)
+        #Min Vol
+        values_stocks_min = [int(x*initial_amount_selected) for x in port_min[0]]
+        tickers_min = dict(zip(list_stock_ticker, values_stocks_min))
+        #Max Sharpe
+        values_stocks_max = [int(x*initial_amount_selected) for x in port_max[0]]
+        tickers_max = dict(zip(list_stock_ticker, values_stocks_max))
+        
+        port_returns, benchmark_returns, fig, fig1, fig2 = portfolio_returns_extra(tickers, start, end, '^GSPC', tickers_min, tickers_max)
+        fig2.update_layout(showlegend=False)
+        st.markdown(f"<h1 style='text-align: center;'> Evaluation of All Portfolios </h1>", unsafe_allow_html=True)
+        col1, col2, col3 = st.columns([1,5,1])
+        with col2:
+            st.write(fig2)
 
 
     st.markdown("##")
