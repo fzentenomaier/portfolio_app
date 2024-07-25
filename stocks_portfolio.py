@@ -417,6 +417,7 @@ def plot_portfolio_allocation(port_min, port_max, labels):
     
     return fig
 
+
 def portfolio_returns_extra(tickers_and_values, start_date, end_date, benchmark, min_vol_weights, max_sharpe_weights):
     # Obtaining tickers data with yfinance
     tickers = list(set(list(tickers_and_values.keys()) + list(min_vol_weights.keys()) + list(max_sharpe_weights.keys())))
@@ -488,6 +489,7 @@ def portfolio_returns_extra(tickers_and_values, start_date, end_date, benchmark,
 
     # Running function to compare portfolio and benchmark
     fig2 = portfolio_vs_benchmark_extra(port_returns, benchmark_returns, min_vol_returns, max_sharpe_returns)    
+
     fig1 = 0
     # Displaying Portfolio vs Benchmark plot    
     return port_returns, benchmark_returns, fig, fig1, fig2
