@@ -745,8 +745,9 @@ def main():
             with col2:
                 st.write(fig2)
                     
-        else:
-                st.subheader("Select a minimum of two stocks.")
+    else:
+            st.subheader("Select a minimum of two stocks.")
+                        
 
     st.markdown("##")
     st.markdown("##")
