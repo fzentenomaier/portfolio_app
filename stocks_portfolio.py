@@ -639,7 +639,7 @@ def main():
     start = start.strftime('%Y-%m-%d')
     list_stock_ticker = []
     list_stock_security = []
-    while len(stocks_selected) > 1:
+    if len(stocks_selected) > 1:
         
     
         for stock_selected in stocks_selected:
