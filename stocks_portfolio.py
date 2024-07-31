@@ -8,7 +8,7 @@ import plotly.express as px
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from scipy.optimize import minimize
-
+        
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -639,109 +639,111 @@ def main():
     start = start.strftime('%Y-%m-%d')
     list_stock_ticker = []
     list_stock_security = []
-
-    for stock_selected in stocks_selected:
-        if stock_selected in (sp500_com['Security'].tolist()):
-            stock_security = stock_selected
-            stock_ticker = dic_sp500[stock_selected]
-        if stock_selected in (sp500_com['Symbol'].tolist()):
-            stock_security = dic_sp500_2[stock_selected] 
-            stock_ticker = stock_selected
-        list_stock_ticker.append(stock_ticker)
-        list_stock_security.append(stock_security)
-    st.markdown(f"<h1 style='text-align: center;'> Select the Weights of your Portfolio </h1>", unsafe_allow_html=True)
-    col1,col2,col3 = st.columns([5,1,5])
-    with col1:
-        values_stocks = []
-        number_stocks = len(list_stock_ticker)
-        for i in range(len(list_stock_ticker)):
-            if not values_stocks:
-                final_value = 50
-            values = st.slider(f" {list_stock_security[i]} ({list_stock_ticker[i]}) ", 0, 100, (final_value))
-            number_stocks = number_stocks - 1
-            values_stocks.append(values)
-            if not number_stocks == 0:
-                final_value = int((100 - sum(values_stocks))/number_stocks)
-                
-        if sum(values_stocks) != 100 or any(x < 0 for x in values_stocks):
-            st.error('The total weight of the selected stocks exceeds 100%', icon="🚨")
-
-    if sum(values_stocks) == 100:
-        #st.write('listo')
-        values_stocks_new = [(x/100)*initial_amount_selected for x in values_stocks]
-        tickers = dict(zip(list_stock_ticker, values_stocks_new))
-        port_returns, benchmark_returns, fig, fig1, fig2 = portfolio_returns(tickers, start, end, '^GSPC')
-    else:
-        st.error('The total weight of the selected stocks exceeds 100%', icon="🚨")
+    while len(stocks_selected) > 1:
         
-    st.markdown(f"<h1 style='text-align: center;'> Portfolio Analysis </h1>", unsafe_allow_html=True)
-    with col3:
-        fig.update_layout(showlegend=False)
-        st.write(fig)
     
-    col1,col2,col3 = st.columns([1,15,1])
-    with col2:
-        st.write(fig1)
-        st.markdown(f"<h1 style='text-align: center;'> Portfolio vs Benchmark (S&P500) </h1>", unsafe_allow_html=True)
-        st.markdown(f"<p style='text-align: center; font-size: 14px;'> For this case, the benchmark is the ^GSPC, which represents the S&P 500 index </p>", unsafe_allow_html=True)
-        st.write(fig2)
-    st.divider()
-    st.markdown(f"<h1 style='text-align: center;'>  MVO and Markowitz’s Efficient Frontier</h1>", unsafe_allow_html=True)
-
-    with st.expander('**Explanation**'):
-        # Introduction text
-        st.markdown("""
-            The Mean-Variance Optimization (MVO) and Markowitz’s Efficient Frontier, foundational concepts in modern portfolio theory. Developed by Harry Markowitz in 1952, this method assists investors in constructing portfolios that optimize expected returns for a given level of risk. The Efficient Frontier represents the set of optimal portfolios offering the highest expected return for a defined level of risk or the lowest risk for a given level of expected return.
-        """)
-        
-        # Expected Portfolio Return formula
-        st.markdown("""
-            ### Expected Portfolio Return
-            The expected return of a portfolio is calculated as the weighted sum of the expected returns of the individual assets in the portfolio:
-        """)
-        expected_return_formula = r'\text{Expected Return} = \sum_{i=1}^{n} w_i \mu_i'
-        st.latex(expected_return_formula)
-        
-        # Portfolio Volatility formula
-        st.markdown("""
-            ### Portfolio Volatility
-            The risk (volatility) of a portfolio is determined using the covariance matrix of the asset returns:
-        """)
-        volatility_formula = r'\text{Volatility} = \sqrt{ \sum_{i=1}^{n} \sum_{j=1}^{n} w_i w_j \sigma_{ij} }'
-        st.latex(volatility_formula)
-        
-        # Sharpe Ratio formula
-        st.markdown("""
-            ### Sharpe Ratio
-            The Sharpe ratio is a measure of risk-adjusted return:
-        """)
-        sharpe_ratio_formula = r'\text{Sharpe Ratio} = \frac{ \text{Expected Return} - \text{Risk-Free Rate} }{ \text{Volatility} }'
-        st.latex(sharpe_ratio_formula)
-    if st.button("Run the Optimization Model"):
-     
-        fig, port_min, port_max = get_portfolio_opt(list_stock_ticker, start, end)
-        
-        col1, col2, col3 = st.columns([5,1,5])
+        for stock_selected in stocks_selected:
+            if stock_selected in (sp500_com['Security'].tolist()):
+                stock_security = stock_selected
+                stock_ticker = dic_sp500[stock_selected]
+            if stock_selected in (sp500_com['Symbol'].tolist()):
+                stock_security = dic_sp500_2[stock_selected] 
+                stock_ticker = stock_selected
+            list_stock_ticker.append(stock_ticker)
+            list_stock_security.append(stock_security)
+        st.markdown(f"<h1 style='text-align: center;'> Select the Weights of your Portfolio </h1>", unsafe_allow_html=True)
+        col1,col2,col3 = st.columns([5,1,5])
         with col1:
-            st.write(fig)
-        
+            values_stocks = []
+            number_stocks = len(list_stock_ticker)
+            for i in range(len(list_stock_ticker)):
+                if not values_stocks:
+                    final_value = 50
+                values = st.slider(f" {list_stock_security[i]} ({list_stock_ticker[i]}) ", 0, 100, (final_value))
+                number_stocks = number_stocks - 1
+                values_stocks.append(values)
+                if not number_stocks == 0:
+                    final_value = int((100 - sum(values_stocks))/number_stocks)
+                    
+            if sum(values_stocks) != 100 or any(x < 0 for x in values_stocks):
+                st.error('The total weight of the selected stocks exceeds 100%', icon="🚨")
+    
+        if sum(values_stocks) == 100:
+            #st.write('listo')
+            values_stocks_new = [(x/100)*initial_amount_selected for x in values_stocks]
+            tickers = dict(zip(list_stock_ticker, values_stocks_new))
+            port_returns, benchmark_returns, fig, fig1, fig2 = portfolio_returns(tickers, start, end, '^GSPC')
+        else:
+            st.error('The total weight of the selected stocks exceeds 100%', icon="🚨")
+            
+        st.markdown(f"<h1 style='text-align: center;'> Portfolio Analysis </h1>", unsafe_allow_html=True)
         with col3:
-            fig = plot_portfolio_allocation(port_min, port_max, list_stock_ticker)
             fig.update_layout(showlegend=False)
             st.write(fig)
-        #Min Vol
-        values_stocks_min = [int(x*initial_amount_selected) for x in port_min[0]]
-        tickers_min = dict(zip(list_stock_ticker, values_stocks_min))
-        #Max Sharpe
-        values_stocks_max = [int(x*initial_amount_selected) for x in port_max[0]]
-        tickers_max = dict(zip(list_stock_ticker, values_stocks_max))
         
-        port_returns, benchmark_returns, fig, fig1, fig2 = portfolio_returns_extra(tickers, start, end, '^GSPC', tickers_min, tickers_max)
-        fig2.update_layout(showlegend=False)
-        st.markdown(f"<h1 style='text-align: center;'> Evaluation of All Portfolios </h1>", unsafe_allow_html=True)
-        col1, col2, col3 = st.columns([1,5,1])
+        col1,col2,col3 = st.columns([1,15,1])
         with col2:
+            st.write(fig1)
+            st.markdown(f"<h1 style='text-align: center;'> Portfolio vs Benchmark (S&P500) </h1>", unsafe_allow_html=True)
+            st.markdown(f"<p style='text-align: center; font-size: 14px;'> For this case, the benchmark is the ^GSPC, which represents the S&P 500 index </p>", unsafe_allow_html=True)
             st.write(fig2)
+        st.divider()
+        st.markdown(f"<h1 style='text-align: center;'>  MVO and Markowitz’s Efficient Frontier</h1>", unsafe_allow_html=True)
+    
+        with st.expander('**Explanation**'):
+            # Introduction text
+            st.markdown("""
+                The Mean-Variance Optimization (MVO) and Markowitz’s Efficient Frontier, foundational concepts in modern portfolio theory. Developed by Harry Markowitz in 1952, this method assists investors in constructing portfolios that optimize expected returns for a given level of risk. The Efficient Frontier represents the set of optimal portfolios offering the highest expected return for a defined level of risk or the lowest risk for a given level of expected return.
+            """)
+            
+            # Expected Portfolio Return formula
+            st.markdown("""
+                ### Expected Portfolio Return
+                The expected return of a portfolio is calculated as the weighted sum of the expected returns of the individual assets in the portfolio:
+            """)
+            expected_return_formula = r'\text{Expected Return} = \sum_{i=1}^{n} w_i \mu_i'
+            st.latex(expected_return_formula)
+            
+            # Portfolio Volatility formula
+            st.markdown("""
+                ### Portfolio Volatility
+                The risk (volatility) of a portfolio is determined using the covariance matrix of the asset returns:
+            """)
+            volatility_formula = r'\text{Volatility} = \sqrt{ \sum_{i=1}^{n} \sum_{j=1}^{n} w_i w_j \sigma_{ij} }'
+            st.latex(volatility_formula)
+            
+            # Sharpe Ratio formula
+            st.markdown("""
+                ### Sharpe Ratio
+                The Sharpe ratio is a measure of risk-adjusted return:
+            """)
+            sharpe_ratio_formula = r'\text{Sharpe Ratio} = \frac{ \text{Expected Return} - \text{Risk-Free Rate} }{ \text{Volatility} }'
+            st.latex(sharpe_ratio_formula)
+        if st.button("Run the Optimization Model"):
+         
+            fig, port_min, port_max = get_portfolio_opt(list_stock_ticker, start, end)
+            
+            col1, col2, col3 = st.columns([5,1,5])
+            with col1:
+                st.write(fig)
+            
+            with col3:
+                fig = plot_portfolio_allocation(port_min, port_max, list_stock_ticker)
+                fig.update_layout(showlegend=False)
+                st.write(fig)
+            #Min Vol
+            values_stocks_min = [int(x*initial_amount_selected) for x in port_min[0]]
+            tickers_min = dict(zip(list_stock_ticker, values_stocks_min))
+            #Max Sharpe
+            values_stocks_max = [int(x*initial_amount_selected) for x in port_max[0]]
+            tickers_max = dict(zip(list_stock_ticker, values_stocks_max))
+            
+            port_returns, benchmark_returns, fig, fig1, fig2 = portfolio_returns_extra(tickers, start, end, '^GSPC', tickers_min, tickers_max)
+            fig2.update_layout(showlegend=False)
+            st.markdown(f"<h1 style='text-align: center;'> Evaluation of All Portfolios </h1>", unsafe_allow_html=True)
+            col1, col2, col3 = st.columns([1,5,1])
+            with col2:
+                st.write(fig2)
 
 
     st.markdown("##")
